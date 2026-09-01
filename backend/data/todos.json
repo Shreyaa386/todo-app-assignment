@@ -3,12 +3,16 @@
     "id": 1,
     "title": "Learn React",
     "description": "Complete React fundamentals",
-    "completed": false
+    "completed": true,
+    "createdAt": "2026-09-01T08:52:15.972Z",
+    "updatedAt": "2026-09-01T08:54:28.844Z"
   },
   {
     "id": 2,
     "title": "Build Todo API",
     "description": "Create CRUD APIs using Express",
-    "completed": true
+    "completed": false,
+    "createdAt": "2026-09-01T08:52:15.972Z",
+    "updatedAt": "2026-09-01T08:54:33.805Z"
   }
 ]
