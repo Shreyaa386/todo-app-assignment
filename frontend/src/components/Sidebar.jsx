@@ -21,7 +21,7 @@ export default function Sidebar({ statusFilter, onSelectFilter }) {
 
       <nav className="sidebar-nav" aria-label="Dashboard Menu">
         <div className="nav-section-label">MENU</div>
-        
+
         <button
           type="button"
           className={`nav-item ${!isDetailsPage && statusFilter === 'all' ? 'active' : ''}`}
@@ -58,16 +58,6 @@ export default function Sidebar({ statusFilter, onSelectFilter }) {
           <span className="nav-label">Completed</span>
         </button>
       </nav>
-
-      <div className="sidebar-footer">
-        <div className="user-profile-widget">
-          <div className="avatar-circle">TP</div>
-          <div className="user-info">
-            <span className="user-name">User Workspace</span>
-            <span className="user-role">Productivity Pro</span>
-          </div>
-        </div>
-      </div>
     </aside>
   );
 }

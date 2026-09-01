@@ -13,6 +13,7 @@ async function readTodosFromFile() {
       (item) =>
         new Todo(
           item.id,
+          item.userId || 1,
           item.title,
           item.description,
           item.completed,
@@ -22,7 +23,6 @@ async function readTodosFromFile() {
     );
   } catch (error) {
     if (error.code === "ENOENT") {
-      // If file doesn't exist, return empty list
       return [];
     }
     throw error;
@@ -36,8 +36,12 @@ async function writeTodosToFile(todos) {
 }
 
 class TodoService {
-  static async getAllTodos({ search, status } = {}) {
+  static async getAllTodos(userId, { search, status } = {}) {
     let todos = await readTodosFromFile();
+    const numericUserId = Number(userId);
+
+    // Filter by user ownership
+    todos = todos.filter((t) => t.userId === numericUserId);
 
     if (search && search.trim() !== "") {
       const query = search.toLowerCase().trim();
@@ -59,24 +63,26 @@ class TodoService {
     return todos;
   }
 
-  static async getTodoById(id) {
+  static async getTodoById(userId, id) {
     const todos = await readTodosFromFile();
-    const todo = todos.find((t) => t.id === Number(id));
+    const numericUserId = Number(userId);
+    const todo = todos.find((t) => t.id === Number(id) && t.userId === numericUserId);
     return todo || null;
   }
 
-  static async createTodo({ title, description = "" }) {
+  static async createTodo(userId, { title, description = "" }) {
     const todos = await readTodosFromFile();
     const newId = todos.length > 0 ? Math.max(...todos.map((t) => t.id)) + 1 : 1;
-    const newTodo = new Todo(newId, title.trim(), description.trim(), false);
+    const newTodo = new Todo(newId, userId, title.trim(), description.trim(), false);
     todos.push(newTodo);
     await writeTodosToFile(todos);
     return newTodo;
   }
 
-  static async updateTodo(id, { title, description, completed }) {
+  static async updateTodo(userId, id, { title, description, completed }) {
     const todos = await readTodosFromFile();
-    const index = todos.findIndex((t) => t.id === Number(id));
+    const numericUserId = Number(userId);
+    const index = todos.findIndex((t) => t.id === Number(id) && t.userId === numericUserId);
     if (index === -1) return null;
 
     const current = todos[index];
@@ -86,6 +92,7 @@ class TodoService {
 
     const updatedTodo = new Todo(
       current.id,
+      current.userId,
       updatedTitle,
       updatedDesc,
       updatedCompleted,
@@ -98,9 +105,10 @@ class TodoService {
     return updatedTodo;
   }
 
-  static async deleteTodo(id) {
+  static async deleteTodo(userId, id) {
     const todos = await readTodosFromFile();
-    const index = todos.findIndex((t) => t.id === Number(id));
+    const numericUserId = Number(userId);
+    const index = todos.findIndex((t) => t.id === Number(id) && t.userId === numericUserId);
     if (index === -1) return false;
 
     todos.splice(index, 1);

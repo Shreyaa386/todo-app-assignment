@@ -1,6 +1,7 @@
 class Todo {
-  constructor(id, title, description = "", completed = false, createdAt = null, updatedAt = null) {
+  constructor(id, userId, title, description = "", completed = false, createdAt = null, updatedAt = null) {
     this.id = Number(id);
+    this.userId = Number(userId || 1);
     this.title = title;
     this.description = description;
     this.completed = Boolean(completed);

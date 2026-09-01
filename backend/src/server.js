@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const todoRoutes = require("./routes/todoRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -12,10 +13,14 @@ app.get("/", (req, res) => {
   res.json({
     message: "Todo API is running",
     endpoints: {
+      auth: "/api/auth",
       todos: "/api/todos"
     }
   });
 });
+
+// Mount Auth Routes
+app.use("/api/auth", authRoutes);
 
 // Mount Todo Routes
 app.use("/api/todos", todoRoutes);
