@@ -22,7 +22,6 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
     setError('');
   }, [initialData]);
 
-  // Support closing modal with Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && !submitting) {
@@ -37,7 +36,7 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
     e.preventDefault();
 
     if (!title.trim()) {
-      setError('Title is required and cannot be empty.');
+      setError('Task title is required.');
       return;
     }
 
@@ -50,7 +49,7 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
         completed
       });
     } catch (err) {
-      setError(err.message || 'An error occurred while saving the todo task.');
+      setError(err.message || 'An error occurred while saving task.');
     } finally {
       setSubmitting(false);
     }
@@ -58,20 +57,23 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
 
   return (
     <div
-      className="modal-backdrop"
+      className="modal-backdrop-overlay"
       onClick={onCancel}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-heading"
+      aria-labelledby="modal-title-text"
     >
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header">
-          <h2 id="modal-heading">{isEditMode ? 'Edit Todo Task' : 'Create New Task'}</h2>
+      <div className="dashboard-modal-card" onClick={(e) => e.stopPropagation()}>
+        <div className="dashboard-modal-header">
+          <div className="modal-title-box">
+            <span className="modal-icon">{isEditMode ? '✏️' : '✨'}</span>
+            <h2 id="modal-title-text">{isEditMode ? 'Edit Task' : 'Quick Add Task'}</h2>
+          </div>
           <button
             type="button"
-            className="close-btn"
+            className="modal-close-icon"
             onClick={onCancel}
-            aria-label="Close dialog"
+            aria-label="Close modal dialog"
             disabled={submitting}
           >
             ×
@@ -79,20 +81,20 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
         </div>
 
         {error && (
-          <div className="error-banner" role="alert">
-            {error}
+          <div className="modal-error-alert" role="alert">
+            <span aria-hidden="true">⚠️</span> {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="todo-title-input">
-              Title <span style={{ color: 'var(--accent-rose)' }}>*</span>
+        <form onSubmit={handleSubmit} className="dashboard-modal-form">
+          <div className="modal-form-field">
+            <label htmlFor="modal-task-title">
+              Task Title <span className="req-star">*</span>
             </label>
             <input
-              id="todo-title-input"
+              id="modal-task-title"
               type="text"
-              placeholder="e.g. Complete React assignment"
+              placeholder="What needs to be done?"
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -104,12 +106,12 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="todo-desc-input">Description</label>
+          <div className="modal-form-field">
+            <label htmlFor="modal-task-desc">Task Description</label>
             <textarea
-              id="todo-desc-input"
+              id="modal-task-desc"
               rows="4"
-              placeholder="Add optional notes, requirements, or details..."
+              placeholder="Add optional notes, criteria, or subtasks..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               disabled={submitting}
@@ -117,28 +119,22 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
           </div>
 
           {isEditMode && (
-            <div
-              className="form-group"
-              style={{ flexDirection: 'row', alignItems: 'center', gap: '0.75rem', marginTop: '0.5rem' }}
-            >
+            <div className="modal-form-checkbox-row">
               <input
-                id="todo-completed-checkbox"
+                id="modal-task-status"
                 type="checkbox"
                 checked={completed}
                 onChange={(e) => setCompleted(e.target.checked)}
-                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
                 disabled={submitting}
               />
-              <label htmlFor="todo-completed-checkbox" style={{ cursor: 'pointer', margin: 0 }}>
-                Mark task as completed
-              </label>
+              <label htmlFor="modal-task-status">Mark task as completed</label>
             </div>
           )}
 
-          <div className="form-actions">
+          <div className="modal-actions-footer">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="dashboard-btn btn-glass"
               onClick={onCancel}
               disabled={submitting}
             >
@@ -146,10 +142,18 @@ export default function TodoForm({ initialData = null, onSubmit, onCancel }) {
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="dashboard-btn btn-glow-primary"
               disabled={submitting}
             >
-              {submitting ? 'Saving...' : isEditMode ? 'Update Task' : 'Create Task'}
+              {submitting ? (
+                <>
+                  <span className="btn-spinner"></span> Saving...
+                </>
+              ) : isEditMode ? (
+                'Save Changes'
+              ) : (
+                'Create Task'
+              )}
             </button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
+import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import TodoForm from '../components/TodoForm';
 import { fetchTodoById, updateTodo, deleteTodo } from '../services/todoApi';
@@ -67,93 +68,99 @@ export default function TodoDetails() {
   };
 
   return (
-    <div className="app-container">
-      <Navbar todosCount={todo ? 1 : 0} completedCount={todo?.completed ? 1 : 0} />
+    <div className="dashboard-layout-container">
+      <Sidebar statusFilter="all" onSelectFilter={() => navigate('/todos')} />
 
-      <main className="main-content">
-        <div className="detail-container">
-          <Link to="/todos" className="back-link" aria-label="Return to todo list">
-            ← Back to Todo List
+      <div className="dashboard-main-area">
+        <Navbar todosCount={todo ? 1 : 0} completedCount={todo?.completed ? 1 : 0} />
+
+        <main className="dashboard-content-grid single-column">
+          <Link to="/todos" className="dashboard-back-link">
+            ← Return to Dashboard
           </Link>
 
           {loading ? (
-            <div className="loading-spinner" aria-live="polite">
-              <div className="spinner" aria-hidden="true"></div>
+            <div className="dashboard-loading-card" aria-live="polite">
+              <div className="dashboard-spinner" aria-hidden="true"></div>
               <p>Loading task details...</p>
             </div>
           ) : error ? (
-            <div className="empty-state">
+            <div className="dashboard-empty-card">
               <span className="empty-icon" aria-hidden="true">⚠️</span>
               <h3>Task Not Found</h3>
               <p>{error}</p>
               <button
                 type="button"
-                className="btn btn-primary"
-                style={{ marginTop: '1.25rem' }}
+                className="dashboard-btn btn-glow-primary"
+                style={{ marginTop: '1rem' }}
                 onClick={() => navigate('/todos')}
               >
-                Return to Todo List
+                Back to Dashboard
               </button>
             </div>
           ) : todo ? (
-            <article className="detail-card">
-              <div className="detail-header">
-                <div>
-                  <h1 className="detail-title">{todo.title}</h1>
-                  <div className="detail-meta">
-                    <span>Todo ID: #{todo.id}</span>
+            <article className="dashboard-details-card">
+              <div className="details-header-row">
+                <div className="details-title-group">
+                  <h1 className="details-main-title">{todo.title}</h1>
+                  <div className="details-meta-tags">
+                    <span className="meta-tag">Task ID: #{todo.id}</span>
                     {todo.createdAt && (
-                      <span>Created: {new Date(todo.createdAt).toLocaleString()}</span>
+                      <span className="meta-tag">Created: {new Date(todo.createdAt).toLocaleString()}</span>
                     )}
                     {todo.updatedAt && (
-                      <span>Updated: {new Date(todo.updatedAt).toLocaleString()}</span>
+                      <span className="meta-tag">Updated: {new Date(todo.updatedAt).toLocaleString()}</span>
                     )}
                   </div>
                 </div>
 
-                <span className={`status-tag ${todo.completed ? 'completed' : 'active'}`}>
+                <span className={`status-badge-pill lg ${todo.completed ? 'completed' : 'pending'}`}>
+                  <span className="pill-dot" aria-hidden="true"></span>
                   {todo.completed ? 'Completed' : 'Pending'}
                 </span>
               </div>
 
-              <div className="detail-body">
-                {todo.description ? (
-                  todo.description
-                ) : (
-                  <em style={{ color: 'var(--text-dim)' }}>No additional description provided for this task.</em>
-                )}
+              <div className="details-body-box">
+                <h4 className="body-box-heading">Description</h4>
+                <p className="body-box-text">
+                  {todo.description ? (
+                    todo.description
+                  ) : (
+                    <em style={{ color: 'var(--text-dim)' }}>No additional description provided for this task.</em>
+                  )}
+                </p>
               </div>
 
-              <div className="detail-actions">
+              <div className="details-footer-actions">
                 <button
                   type="button"
-                  className={`btn ${todo.completed ? 'btn-secondary' : 'btn-primary'}`}
+                  className={`dashboard-btn ${todo.completed ? 'btn-glass' : 'btn-glow-primary'}`}
                   onClick={handleToggleStatus}
                 >
                   {todo.completed ? 'Mark as Pending' : 'Mark as Completed'}
                 </button>
 
-                <div style={{ display: 'flex', gap: '0.75rem' }}>
+                <div className="details-action-buttons">
                   <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="dashboard-btn btn-glass"
                     onClick={() => setIsEditing(true)}
                   >
-                    ✏️ Edit
+                    ✏️ Edit Task
                   </button>
                   <button
                     type="button"
-                    className="btn btn-danger"
+                    className="dashboard-btn btn-danger-glass"
                     onClick={handleDeleteTodo}
                   >
-                    🗑️ Delete
+                    🗑️ Delete Task
                   </button>
                 </div>
               </div>
             </article>
           ) : null}
-        </div>
-      </main>
+        </main>
+      </div>
 
       {isEditing && todo && (
         <TodoForm

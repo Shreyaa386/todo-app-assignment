@@ -3,17 +3,17 @@
     "id": 1,
     "title": "Learn React",
     "description": "Complete React fundamentals",
-    "completed": true,
+    "completed": false,
     "createdAt": "2026-09-01T08:52:15.972Z",
-    "updatedAt": "2026-09-01T08:54:28.844Z"
+    "updatedAt": "2026-09-01T10:19:57.671Z"
   },
   {
     "id": 2,
     "title": "Build Todo API",
     "description": "Create CRUD APIs using Express",
-    "completed": true,
+    "completed": false,
     "createdAt": "2026-09-01T08:52:15.972Z",
-    "updatedAt": "2026-09-01T09:37:04.146Z"
+    "updatedAt": "2026-09-01T10:19:55.031Z"
   },
   {
     "id": 3,
@@ -21,6 +21,14 @@
     "description": "need to revise nodejs for placements",
     "completed": false,
     "createdAt": "2026-09-01T09:36:57.947Z",
-    "updatedAt": "2026-09-01T09:36:57.947Z"
+    "updatedAt": "2026-09-01T10:19:56.414Z"
+  },
+  {
+    "id": 4,
+    "title": "assignment",
+    "description": "complete assignments",
+    "completed": false,
+    "createdAt": "2026-09-01T10:19:41.187Z",
+    "updatedAt": "2026-09-01T10:19:52.465Z"
   }
 ]
