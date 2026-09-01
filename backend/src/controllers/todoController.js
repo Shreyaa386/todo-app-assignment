@@ -15,10 +15,17 @@ class TodoController {
   static async getTodoById(req, res) {
     try {
       const { id } = req.params;
-      const todo = await TodoService.getTodoById(id);
+      const numericId = Number(id);
+
+      if (isNaN(numericId) || !Number.isInteger(numericId) || numericId <= 0) {
+        return res.status(400).json({ error: "Invalid Todo ID. ID must be a positive integer" });
+      }
+
+      const todo = await TodoService.getTodoById(numericId);
       if (!todo) {
         return res.status(404).json({ error: `Todo with ID ${id} not found` });
       }
+
       return res.status(200).json(todo);
     } catch (error) {
       console.error("Error fetching todo:", error);
@@ -28,7 +35,7 @@ class TodoController {
 
   static async createTodo(req, res) {
     try {
-      const { title, description } = req.body;
+      const { title, description = "" } = req.body;
 
       if (!title || typeof title !== "string" || title.trim() === "") {
         return res.status(400).json({ error: "Title is required and cannot be empty" });
@@ -45,13 +52,19 @@ class TodoController {
   static async updateTodo(req, res) {
     try {
       const { id } = req.params;
+      const numericId = Number(id);
+
+      if (isNaN(numericId) || !Number.isInteger(numericId) || numericId <= 0) {
+        return res.status(400).json({ error: "Invalid Todo ID. ID must be a positive integer" });
+      }
+
       const { title, description, completed } = req.body;
 
       if (title !== undefined && (typeof title !== "string" || title.trim() === "")) {
         return res.status(400).json({ error: "Title cannot be empty" });
       }
 
-      const updatedTodo = await TodoService.updateTodo(id, {
+      const updatedTodo = await TodoService.updateTodo(numericId, {
         title,
         description,
         completed
@@ -71,13 +84,19 @@ class TodoController {
   static async deleteTodo(req, res) {
     try {
       const { id } = req.params;
-      const deleted = await TodoService.deleteTodo(id);
+      const numericId = Number(id);
+
+      if (isNaN(numericId) || !Number.isInteger(numericId) || numericId <= 0) {
+        return res.status(400).json({ error: "Invalid Todo ID. ID must be a positive integer" });
+      }
+
+      const deleted = await TodoService.deleteTodo(numericId);
 
       if (!deleted) {
         return res.status(404).json({ error: `Todo with ID ${id} not found` });
       }
 
-      return res.status(200).json({ message: "Todo deleted successfully", id: Number(id) });
+      return res.status(200).json({ message: "Todo deleted successfully", id: numericId });
     } catch (error) {
       console.error("Error deleting todo:", error);
       return res.status(500).json({ error: "Failed to delete todo" });

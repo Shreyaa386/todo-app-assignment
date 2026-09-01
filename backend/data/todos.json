@@ -11,8 +11,16 @@
     "id": 2,
     "title": "Build Todo API",
     "description": "Create CRUD APIs using Express",
-    "completed": false,
+    "completed": true,
     "createdAt": "2026-09-01T08:52:15.972Z",
-    "updatedAt": "2026-09-01T08:54:33.805Z"
+    "updatedAt": "2026-09-01T09:37:04.146Z"
+  },
+  {
+    "id": 3,
+    "title": "Revision of nodejs",
+    "description": "need to revise nodejs for placements",
+    "completed": false,
+    "createdAt": "2026-09-01T09:36:57.947Z",
+    "updatedAt": "2026-09-01T09:36:57.947Z"
   }
 ]
