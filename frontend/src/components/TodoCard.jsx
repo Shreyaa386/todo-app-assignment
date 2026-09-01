@@ -4,18 +4,34 @@ import { Link } from 'react-router-dom';
 export default function TodoCard({ todo, onToggleStatus, onEdit, onDelete }) {
   const { id, title, description, completed } = todo;
 
+  const handleKeyDownToggle = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onToggleStatus(id, !completed);
+    }
+  };
+
   return (
-    <div className={`todo-card ${completed ? 'completed' : ''}`}>
+    <article
+      className={`todo-card ${completed ? 'completed' : ''}`}
+      aria-labelledby={`todo-title-${id}`}
+    >
       <div className="card-header">
-        <div
+        <button
+          type="button"
           className={`checkbox-custom ${completed ? 'checked' : ''}`}
           onClick={() => onToggleStatus(id, !completed)}
-          title={completed ? 'Mark as pending' : 'Mark as completed'}
+          onKeyDown={handleKeyDownToggle}
+          aria-label={completed ? `Mark "${title}" as pending` : `Mark "${title}" as completed`}
+          title={completed ? 'Mark task as pending' : 'Mark task as completed'}
         >
-          {completed && '✓'}
-        </div>
+          {completed && <span aria-hidden="true">✓</span>}
+        </button>
+        
         <div className="todo-info">
-          <h3 className="todo-title">{title}</h3>
+          <h3 id={`todo-title-${id}`} className="todo-title">
+            {title}
+          </h3>
           {description && <p className="todo-description">{description}</p>}
         </div>
       </div>
@@ -29,28 +45,31 @@ export default function TodoCard({ todo, onToggleStatus, onEdit, onDelete }) {
           <Link
             to={`/todo?id=${id}`}
             className="icon-btn"
-            title="View details"
+            aria-label={`View details for "${title}"`}
+            title="View Details"
           >
-            👁️
+            <span aria-hidden="true">👁️</span>
           </Link>
           <button
             type="button"
             className="icon-btn"
             onClick={() => onEdit(todo)}
-            title="Edit todo"
+            aria-label={`Edit task "${title}"`}
+            title="Edit Task"
           >
-            ✏️
+            <span aria-hidden="true">✏️</span>
           </button>
           <button
             type="button"
             className="icon-btn delete"
             onClick={() => onDelete(id)}
-            title="Delete todo"
+            aria-label={`Delete task "${title}"`}
+            title="Delete Task"
           >
-            🗑️
+            <span aria-hidden="true">🗑️</span>
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

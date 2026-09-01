@@ -17,7 +17,7 @@ export default function TodoDetails() {
   useEffect(() => {
     async function loadTodo() {
       if (!id || isNaN(Number(id))) {
-        setError('Invalid or missing Todo ID parameter in URL. Example format: /todo?id=1');
+        setError('Invalid or missing Todo ID parameter. Please specify a valid ID, e.g. /todo?id=1');
         setLoading(false);
         return;
       }
@@ -29,7 +29,7 @@ export default function TodoDetails() {
         setTodo(data);
       } catch (err) {
         console.error('Error fetching todo details:', err);
-        setError(err.message || `Failed to fetch Todo #${id}`);
+        setError(err.message || `Todo task #${id} could not be found or loaded.`);
       } finally {
         setLoading(false);
       }
@@ -72,18 +72,18 @@ export default function TodoDetails() {
 
       <main className="main-content">
         <div className="detail-container">
-          <Link to="/todos" className="back-link">
+          <Link to="/todos" className="back-link" aria-label="Return to todo list">
             ← Back to Todo List
           </Link>
 
           {loading ? (
-            <div className="loading-spinner">
-              <div className="spinner"></div>
+            <div className="loading-spinner" aria-live="polite">
+              <div className="spinner" aria-hidden="true"></div>
               <p>Loading task details...</p>
             </div>
           ) : error ? (
             <div className="empty-state">
-              <span className="empty-icon">⚠️</span>
+              <span className="empty-icon" aria-hidden="true">⚠️</span>
               <h3>Task Not Found</h3>
               <p>{error}</p>
               <button
@@ -96,7 +96,7 @@ export default function TodoDetails() {
               </button>
             </div>
           ) : todo ? (
-            <div className="detail-card">
+            <article className="detail-card">
               <div className="detail-header">
                 <div>
                   <h1 className="detail-title">{todo.title}</h1>
@@ -120,7 +120,7 @@ export default function TodoDetails() {
                 {todo.description ? (
                   todo.description
                 ) : (
-                  <em style={{ color: 'var(--text-dim)' }}>No description provided for this todo.</em>
+                  <em style={{ color: 'var(--text-dim)' }}>No additional description provided for this task.</em>
                 )}
               </div>
 
@@ -150,7 +150,7 @@ export default function TodoDetails() {
                   </button>
                 </div>
               </div>
-            </div>
+            </article>
           ) : null}
         </div>
       </main>

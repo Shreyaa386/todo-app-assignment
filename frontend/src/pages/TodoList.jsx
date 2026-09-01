@@ -23,7 +23,9 @@ export default function TodoList() {
       setTodos(data);
     } catch (err) {
       console.error('Error fetching todos:', err);
-      setError(err.message || 'Could not connect to backend server. Make sure the API is running on http://localhost:5000');
+      setError(
+        err.message || 'Unable to connect to the backend server. Please verify that Express server is running at http://localhost:5000'
+      );
     } finally {
       setLoading(false);
     }
@@ -94,7 +96,7 @@ export default function TodoList() {
           <div className="header-top">
             <div className="header-title-group">
               <h1>Todo List</h1>
-              <p>Manage, track, and complete your tasks efficiently.</p>
+              <p>Organize, track, and manage your tasks efficiently.</p>
             </div>
             <button
               type="button"
@@ -103,25 +105,30 @@ export default function TodoList() {
                 setEditingTodo(null);
                 setIsFormOpen(true);
               }}
+              aria-label="Create new task"
             >
-              <span>+</span> Create Todo
+              <span aria-hidden="true">+</span> Create Todo
             </button>
           </div>
 
-          <div className="controls-bar">
+          <div className="controls-bar" role="search">
             <div className="search-box">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon" aria-hidden="true">🔍</span>
               <input
+                id="search-todos-input"
                 type="text"
                 placeholder="Search todos by title or description..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search todos"
               />
             </div>
 
-            <div className="filter-tabs">
+            <div className="filter-tabs" role="tablist" aria-label="Filter todos by status">
               <button
                 type="button"
+                role="tab"
+                aria-selected={statusFilter === 'all'}
                 className={`filter-tab ${statusFilter === 'all' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('all')}
               >
@@ -129,6 +136,8 @@ export default function TodoList() {
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={statusFilter === 'active'}
                 className={`filter-tab ${statusFilter === 'active' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('active')}
               >
@@ -136,6 +145,8 @@ export default function TodoList() {
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={statusFilter === 'completed'}
                 className={`filter-tab ${statusFilter === 'completed' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('completed')}
               >
@@ -146,25 +157,25 @@ export default function TodoList() {
         </div>
 
         {error && (
-          <div className="error-banner" style={{ marginBottom: '1.5rem' }}>
+          <div className="error-banner" role="alert" style={{ marginBottom: '1.5rem' }}>
             {error}
           </div>
         )}
 
         {loading ? (
-          <div className="loading-spinner">
-            <div className="spinner"></div>
-            <p>Loading your todos...</p>
+          <div className="loading-spinner" aria-live="polite">
+            <div className="spinner" aria-hidden="true"></div>
+            <p>Loading todos...</p>
           </div>
         ) : todos.length === 0 ? (
           <div className="empty-state">
-            <span className="empty-icon">📝</span>
+            <span className="empty-icon" aria-hidden="true">📝</span>
             <h3>No Todos Found</h3>
             <p>
               {search
-                ? `No todos matching "${search}"`
+                ? `No tasks matching "${search}"`
                 : statusFilter !== 'all'
-                ? `No ${statusFilter === 'active' ? 'pending' : 'completed'} todos currently available`
+                ? `No ${statusFilter === 'active' ? 'pending' : 'completed'} tasks currently available.`
                 : 'Get started by creating your first Todo!'}
             </p>
             <button
