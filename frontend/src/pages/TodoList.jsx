@@ -49,7 +49,6 @@ export default function TodoList() {
 
   const handleToggleStatus = async (id, newCompletedState) => {
     try {
-      // Optimistic state update for instant response
       setTodos((prev) =>
         prev.map((t) => (t.id === id ? { ...t, completed: newCompletedState } : t))
       );
@@ -57,7 +56,7 @@ export default function TodoList() {
       loadTodos();
     } catch (err) {
       console.error('Failed to update status:', err);
-      loadTodos(); // revert state on error
+      loadTodos();
     }
   };
 
@@ -94,8 +93,8 @@ export default function TodoList() {
         <div className="dashboard-header">
           <div className="header-top">
             <div className="header-title-group">
-              <h1>My Tasks</h1>
-              <p>Manage, organize, and track your daily priorities efficiently.</p>
+              <h1>Todo List</h1>
+              <p>Manage, track, and complete your tasks efficiently.</p>
             </div>
             <button
               type="button"
@@ -105,7 +104,7 @@ export default function TodoList() {
                 setIsFormOpen(true);
               }}
             >
-              <span>+</span> New Task
+              <span>+</span> Create Todo
             </button>
           </div>
 
@@ -114,7 +113,7 @@ export default function TodoList() {
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Search tasks by title or description..."
+                placeholder="Search todos by title or description..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -133,7 +132,7 @@ export default function TodoList() {
                 className={`filter-tab ${statusFilter === 'active' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('active')}
               >
-                Active
+                Pending
               </button>
               <button
                 type="button"
@@ -155,18 +154,18 @@ export default function TodoList() {
         {loading ? (
           <div className="loading-spinner">
             <div className="spinner"></div>
-            <p>Loading your tasks...</p>
+            <p>Loading your todos...</p>
           </div>
         ) : todos.length === 0 ? (
           <div className="empty-state">
             <span className="empty-icon">📝</span>
-            <h3>No tasks found</h3>
+            <h3>No Todos Found</h3>
             <p>
               {search
-                ? `No tasks matching "${search}"`
+                ? `No todos matching "${search}"`
                 : statusFilter !== 'all'
-                ? `No ${statusFilter} tasks currently available`
-                : 'Get started by creating your first todo task!'}
+                ? `No ${statusFilter === 'active' ? 'pending' : 'completed'} todos currently available`
+                : 'Get started by creating your first Todo!'}
             </p>
             <button
               type="button"
@@ -177,7 +176,7 @@ export default function TodoList() {
                 setIsFormOpen(true);
               }}
             >
-              Create New Task
+              Create Todo
             </button>
           </div>
         ) : (

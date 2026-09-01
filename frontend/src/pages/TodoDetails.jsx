@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import TodoForm from '../components/TodoForm';
 import { fetchTodoById, updateTodo, deleteTodo } from '../services/todoApi';
 
 export default function TodoDetails() {
-  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id');
   const navigate = useNavigate();
 
   const [todo, setTodo] = useState(null);
@@ -15,6 +16,12 @@ export default function TodoDetails() {
 
   useEffect(() => {
     async function loadTodo() {
+      if (!id || isNaN(Number(id))) {
+        setError('Invalid or missing Todo ID parameter in URL. Example format: /todo?id=1');
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         setError(null);
@@ -22,7 +29,7 @@ export default function TodoDetails() {
         setTodo(data);
       } catch (err) {
         console.error('Error fetching todo details:', err);
-        setError(err.message || `Failed to fetch todo #${id}`);
+        setError(err.message || `Failed to fetch Todo #${id}`);
       } finally {
         setLoading(false);
       }
@@ -52,7 +59,7 @@ export default function TodoDetails() {
     if (window.confirm(`Are you sure you want to delete "${todo.title}"?`)) {
       try {
         await deleteTodo(todo.id);
-        navigate('/');
+        navigate('/todos');
       } catch (err) {
         console.error('Failed to delete todo:', err);
       }
@@ -65,8 +72,8 @@ export default function TodoDetails() {
 
       <main className="main-content">
         <div className="detail-container">
-          <Link to="/" className="back-link">
-            ← Back to All Tasks
+          <Link to="/todos" className="back-link">
+            ← Back to Todo List
           </Link>
 
           {loading ? (
@@ -83,9 +90,9 @@ export default function TodoDetails() {
                 type="button"
                 className="btn btn-primary"
                 style={{ marginTop: '1.25rem' }}
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/todos')}
               >
-                Back to Dashboard
+                Return to Todo List
               </button>
             </div>
           ) : todo ? (
@@ -94,7 +101,7 @@ export default function TodoDetails() {
                 <div>
                   <h1 className="detail-title">{todo.title}</h1>
                   <div className="detail-meta">
-                    <span>Task ID: #{todo.id}</span>
+                    <span>Todo ID: #{todo.id}</span>
                     {todo.createdAt && (
                       <span>Created: {new Date(todo.createdAt).toLocaleString()}</span>
                     )}
@@ -105,7 +112,7 @@ export default function TodoDetails() {
                 </div>
 
                 <span className={`status-tag ${todo.completed ? 'completed' : 'active'}`}>
-                  {todo.completed ? 'Completed' : 'Active'}
+                  {todo.completed ? 'Completed' : 'Pending'}
                 </span>
               </div>
 
@@ -113,7 +120,7 @@ export default function TodoDetails() {
                 {todo.description ? (
                   todo.description
                 ) : (
-                  <em style={{ color: 'var(--text-dim)' }}>No additional description provided.</em>
+                  <em style={{ color: 'var(--text-dim)' }}>No description provided for this todo.</em>
                 )}
               </div>
 
@@ -123,7 +130,7 @@ export default function TodoDetails() {
                   className={`btn ${todo.completed ? 'btn-secondary' : 'btn-primary'}`}
                   onClick={handleToggleStatus}
                 >
-                  {todo.completed ? 'Mark as Active' : 'Mark as Completed'}
+                  {todo.completed ? 'Mark as Pending' : 'Mark as Completed'}
                 </button>
 
                 <div style={{ display: 'flex', gap: '0.75rem' }}>

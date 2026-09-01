@@ -10,7 +10,7 @@ export default function TodoCard({ todo, onToggleStatus, onEdit, onDelete }) {
         <div
           className={`checkbox-custom ${completed ? 'checked' : ''}`}
           onClick={() => onToggleStatus(id, !completed)}
-          title={completed ? 'Mark as active' : 'Mark as completed'}
+          title={completed ? 'Mark as pending' : 'Mark as completed'}
         >
           {completed && '✓'}
         </div>
@@ -22,12 +22,12 @@ export default function TodoCard({ todo, onToggleStatus, onEdit, onDelete }) {
 
       <div className="card-footer">
         <span className={`status-tag ${completed ? 'completed' : 'active'}`}>
-          {completed ? 'Completed' : 'Active'}
+          {completed ? 'Completed' : 'Pending'}
         </span>
 
         <div className="card-actions">
           <Link
-            to={`/todos/${id}`}
+            to={`/todo?id=${id}`}
             className="icon-btn"
             title="View details"
           >

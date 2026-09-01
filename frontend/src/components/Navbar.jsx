@@ -7,7 +7,7 @@ export default function Navbar({ todosCount = 0, completedCount = 0 }) {
   return (
     <header className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-brand">
+        <Link to="/todos" className="navbar-brand">
           <div className="navbar-icon">✓</div>
           <span className="navbar-title">TaskPulse</span>
         </Link>
@@ -17,7 +17,7 @@ export default function Navbar({ todosCount = 0, completedCount = 0 }) {
             Total: <strong>{todosCount}</strong>
           </div>
           <div className="stat-badge pending">
-            Active: <strong>{pendingCount}</strong>
+            Pending: <strong>{pendingCount}</strong>
           </div>
           <div className="stat-badge completed">
             Completed: <strong>{completedCount}</strong>

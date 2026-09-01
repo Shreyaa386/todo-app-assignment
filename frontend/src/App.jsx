@@ -8,9 +8,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<TodoList />} />
-        <Route path="/todos/:id" element={<TodoDetails />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/" element={<Navigate to="/todos" replace />} />
+        <Route path="/todos" element={<TodoList />} />
+        <Route path="/todo" element={<TodoDetails />} />
+        <Route path="*" element={<Navigate to="/todos" replace />} />
       </Routes>
     </BrowserRouter>
   );
